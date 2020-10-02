@@ -5,10 +5,11 @@ defmodule Erm.Application do
 
   use Application
 
+  alias Erm.Boundary.ApplicationManager
+
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Erm.Worker.start_link(arg)
-      # {Erm.Worker, arg}
+      {ApplicationManager, ApplicationManager.registered_applications}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
