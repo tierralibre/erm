@@ -8,7 +8,7 @@ defmodule Erm.Core.Entity do
       owner: nil,
       permissions: nil,
       data: data,
-      valid_from: DateTime.utc_now(),
+      valid_from: :os.system_time(:millisecond),
       valid_to: nil
     }
   end
