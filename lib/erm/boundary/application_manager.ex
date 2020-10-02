@@ -9,8 +9,8 @@ defmodule Erm.Boundary.ApplicationManager do
 
   def registered_applications, do: [Application.new("Locally", [Action.new(:add_store, :internal, Erm.Core.Actions.Locally.AddStore)])]
 
-  def get_applications do
-    GenServer.call(__MODULE__, :get_applications)
+  def list_applications do
+    GenServer.call(__MODULE__, :list_applications)
   end
 
   @spec run_action(any, any, any) :: any
@@ -18,7 +18,7 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, {:run_action, app_name, action_name, params})
   end
 
-  def handle_call(:get_applications, _from, applications), do: {:reply, applications, applications}
+  def handle_call(:list_applications, _from, applications), do: {:reply, applications, applications}
 
   def handle_call({:run_action, app_name, action_name, params}, _from, applications) do
     {:ok, application, to_return} = Application.run_action(applications, app_name, action_name, params)
