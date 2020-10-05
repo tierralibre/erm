@@ -21,7 +21,11 @@ defmodule Erm.Core.Action do
     }
   end
 
-  def run_action(%__MODULE__{type: :internal, implementation: implementation}, application, params) do
+  def run_action(
+        %__MODULE__{type: :internal, implementation: implementation},
+        application,
+        params
+      ) do
     apply(implementation, :run, [application, params])
   end
 end

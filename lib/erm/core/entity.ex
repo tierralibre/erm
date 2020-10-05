@@ -21,6 +21,10 @@ defmodule Erm.Core.Entity do
   end
 
   def remove_entity(%Application{entities: entities} = application, uuid) do
-    {:ok, %Application{application | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)}, %{}}
+    {:ok,
+     %Application{
+       application
+       | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)
+     }, %{}}
   end
 end

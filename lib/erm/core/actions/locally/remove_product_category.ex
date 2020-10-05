@@ -1,4 +1,4 @@
-defmodule  Erm.Core.Actions.Locally.RemoveProductCategory do
+defmodule Erm.Core.Actions.Locally.RemoveProductCategory do
   alias Erm.Core.Actions.ActionImpl
   alias Erm.Core.Application
   alias Erm.Core.Entity

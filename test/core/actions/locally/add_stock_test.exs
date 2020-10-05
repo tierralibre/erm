@@ -14,11 +14,13 @@ defmodule Erm.Core.Actions.Locally.AddStockTest do
     data = %{name: "Rotten tomato"}
     {:ok, application2, %{entity: product}} = AddProduct.run(application1, data)
 
-
     product_uuid = product.uuid
     store_uuid = store.uuid
     data = %{from: product_uuid, to: store_uuid, units: 200, price: "20.34 EUR"}
     {:ok, application, %{}} = AddStock.run(application2, data)
-    assert %Application{relations: [%Relation{type: :stock, from: product_uuid, to: store_uuid, data: data}]} = application
+
+    assert %Application{
+             relations: [%Relation{type: :stock, from: product_uuid, to: store_uuid, data: data}]
+           } = application
   end
 end

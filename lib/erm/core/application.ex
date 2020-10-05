@@ -1,5 +1,4 @@
 defmodule Erm.Core.Application do
-
   alias Erm.Core.Action
 
   defstruct [:name, :entities, :relations, :actions]

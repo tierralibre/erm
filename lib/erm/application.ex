@@ -9,7 +9,7 @@ defmodule Erm.Application do
 
   def start(_type, _args) do
     children = [
-      {ApplicationManager, ApplicationManager.registered_applications}
+      {ApplicationManager, ApplicationManager.registered_applications()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

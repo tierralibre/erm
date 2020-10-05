@@ -3,7 +3,6 @@ defmodule Erm.Core.Actions.Locally.AddProductToCategory do
   alias Erm.Core.Application
   alias Erm.Core.Relation
 
-
   @behaviour ActionImpl
 
   def run(%Application{} = application, %{from: from, to: to} = data) do
