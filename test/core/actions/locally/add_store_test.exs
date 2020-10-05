@@ -1,4 +1,4 @@
-defmodule Erm.Core.Actions.Locally do
+defmodule Erm.Core.Actions.Locally.AddStoreTest do
   use ExUnit.Case
 
   alias Erm.Core.Actions.Locally.AddStore
