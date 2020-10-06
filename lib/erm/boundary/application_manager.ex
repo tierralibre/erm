@@ -32,7 +32,14 @@ defmodule Erm.Boundary.ApplicationManager do
             Erm.Core.Actions.Locally.RemoveProductCategory
           ),
           Action.new(:remove_product, :internal, Erm.Core.Actions.Locally.RemoveProduct),
-          Action.new(:remove_store, :internal, Erm.Core.Actions.Locally.RemoveStore)
+          Action.new(:remove_store, :internal, Erm.Core.Actions.Locally.RemoveStore),
+          Action.new(
+            :remove_product_from_category,
+            :internal,
+            Erm.Core.Actions.Locally.RemoveProductFromCategory
+          ),
+          Action.new(:remove_stock, :internal, Erm.Core.Actions.Locally.RemoveStock),
+          Action.new(:update_stock, :internal, Erm.Core.Actions.Locally.UpdateStock)
         ]
       )
     ]
@@ -42,7 +49,6 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, :list_applications)
   end
 
-  @spec run_action(any, any, any) :: any
   def run_action(app_name, action_name, params) do
     GenServer.call(__MODULE__, {:run_action, app_name, action_name, params})
   end

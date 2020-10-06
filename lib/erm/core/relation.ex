@@ -19,4 +19,31 @@ defmodule Erm.Core.Relation do
     new_rel = new(%{type: type, from: from, to: to, data: data})
     {:ok, %Application{application | relations: relations ++ [new_rel]}, %{relation: new_rel}}
   end
+
+  def remove_relation(%Application{relations: relations} = application, from, to, type) do
+    {:ok,
+     %Application{
+       application
+       | relations:
+           Enum.filter(relations, fn rel ->
+             rel.type != type or rel.from != from or rel.to != to
+           end)
+     }, %{}}
+  end
+
+  def update_relation(%Application{relations: relations} = application, from, to, type, data) do
+    rel_to_update =
+      Enum.find(relations, fn rel -> rel.type == type and rel.from == from and rel.to == to end)
+
+    {:ok,
+     %Application{
+       application
+       | relations: [
+           %__MODULE__{rel_to_update | data: data}
+           | Enum.filter(relations, fn rel ->
+               rel.type != type or rel.from != from or rel.to != to
+             end)
+         ]
+     }, %{}}
+  end
 end
