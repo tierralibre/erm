@@ -1,7 +1,8 @@
 defmodule Erm.Boundary.ApplicationManager do
   use GenServer
 
-  alias Erm.Core.{Application, Action, Entity}
+  alias Erm.Core.{Application, Entity}
+  alias Erm.Boundary.Apps
 
   def init(applications), do: {:ok, applications}
 
@@ -10,39 +11,7 @@ defmodule Erm.Boundary.ApplicationManager do
 
   def registered_applications do
     [
-      Application.new(
-        "Locally",
-        [
-          Action.new(:add_store, :internal, Erm.Core.Actions.Locally.AddStore),
-          Action.new(:update_store, :internal, Erm.Core.Actions.Locally.UpdateStore),
-          Action.new(
-            :add_product_to_category,
-            :internal,
-            Erm.Core.Actions.Locally.AddProductToCategory
-          ),
-          Action.new(:add_product, :internal, Erm.Core.Actions.Locally.AddProduct),
-          Action.new(:add_stock, :internal, Erm.Core.Actions.Locally.AddStock),
-          Action.new(
-            :add_product_category,
-            :internal,
-            Erm.Core.Actions.Locally.AddProductCategory
-          ),
-          Action.new(
-            :remove_product_category,
-            :internal,
-            Erm.Core.Actions.Locally.RemoveProductCategory
-          ),
-          Action.new(:remove_product, :internal, Erm.Core.Actions.Locally.RemoveProduct),
-          Action.new(:remove_store, :internal, Erm.Core.Actions.Locally.RemoveStore),
-          Action.new(
-            :remove_product_from_category,
-            :internal,
-            Erm.Core.Actions.Locally.RemoveProductFromCategory
-          ),
-          Action.new(:remove_stock, :internal, Erm.Core.Actions.Locally.RemoveStock),
-          Action.new(:update_stock, :internal, Erm.Core.Actions.Locally.UpdateStock)
-        ]
-      )
+      Application.new("Locally", Apps.get_actions("Locally"))
     ]
   end
 
@@ -60,6 +29,10 @@ defmodule Erm.Boundary.ApplicationManager do
 
   def get_entity(app_name, uuid) do
     GenServer.call(__MODULE__, {:get_entity, app_name, uuid})
+  end
+
+  def reset_app(app_name) do
+    GenServer.call(__MODULE__, {:reset_app, app_name})
   end
 
   def handle_call(:list_applications, _from, applications),
@@ -86,6 +59,15 @@ defmodule Erm.Boundary.ApplicationManager do
       |> Entity.get_entity(uuid)
 
     {:reply, entity, applications}
+  end
+
+  def handle_call({:reset_app, app_name}, _from, applications) do
+    {:reply, :ok,
+      insert_application(
+        applications,
+        Application.new(app_name,  Apps.get_actions(app_name) )
+      )
+    }
   end
 
   defp insert_application(applications, application) do

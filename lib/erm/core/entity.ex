@@ -25,20 +25,21 @@ defmodule Erm.Core.Entity do
      %Application{
        application
        | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)
-     }, %{}}
+     }, %{entity: Enum.find(entities, fn entity -> entity.uuid == uuid end)}}
   end
 
   def update_entity(%Application{entities: entities} = application, uuid, data) do
     ent_to_update = Enum.find(entities, fn entity -> entity.uuid == uuid end)
+    updated = %__MODULE__{ent_to_update | data: data}
 
     {:ok,
      %Application{
        application
        | entities: [
-           %__MODULE__{ent_to_update | data: data}
+           updated
            | Enum.filter(entities, fn entity -> entity.uuid != uuid end)
          ]
-     }, %{}}
+     }, %{entity: updated}}
   end
 
   def list_entities(%Application{entities: entities}, type) do
