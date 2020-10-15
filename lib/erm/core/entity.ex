@@ -28,6 +28,19 @@ defmodule Erm.Core.Entity do
      }, %{}}
   end
 
+  def update_entity(%Application{entities: entities} = application, uuid, data) do
+    ent_to_update = Enum.find(entities, fn entity -> entity.uuid == uuid end)
+
+    {:ok,
+     %Application{
+       application
+       | entities: [
+           %__MODULE__{ent_to_update | data: data}
+           | Enum.filter(entities, fn entity -> entity.uuid != uuid end)
+         ]
+     }, %{}}
+  end
+
   def list_entities(%Application{entities: entities}, type) do
     Enum.filter(entities, fn entity -> entity.type == type end)
   end

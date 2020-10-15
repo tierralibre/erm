@@ -14,6 +14,7 @@ defmodule Erm.Boundary.ApplicationManager do
         "Locally",
         [
           Action.new(:add_store, :internal, Erm.Core.Actions.Locally.AddStore),
+          Action.new(:update_store, :internal, Erm.Core.Actions.Locally.UpdateStore),
           Action.new(
             :add_product_to_category,
             :internal,
@@ -80,7 +81,8 @@ defmodule Erm.Boundary.ApplicationManager do
   end
 
   def handle_call({:get_entity, app_name, uuid}, _from, applications) do
-    entity = Application.find_application(applications, app_name)
+    entity =
+      Application.find_application(applications, app_name)
       |> Entity.get_entity(uuid)
 
     {:reply, entity, applications}
