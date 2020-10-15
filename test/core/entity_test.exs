@@ -1,5 +1,6 @@
 defmodule Erm.Core.EntityTest do
   use ExUnit.Case
+  use LocallyBuilders
 
   alias Erm.Core.Entity
 
@@ -9,5 +10,12 @@ defmodule Erm.Core.EntityTest do
     assert %Entity{data: data, type: :store} = new_ent
     assert is_binary(new_ent.uuid)
     assert is_number(new_ent.valid_from)
+  end
+
+  test "entities are listed by type" do
+    {_st, _pr,_cat, app} = create_locally_entities()
+    entities = Entity.list_entities(app, :store)
+    assert length(entities) == 1
+    assert List.first(entities).type == :store
   end
 end

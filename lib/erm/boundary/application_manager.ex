@@ -1,7 +1,7 @@
 defmodule Erm.Boundary.ApplicationManager do
   use GenServer
 
-  alias Erm.Core.{Application, Action}
+  alias Erm.Core.{Application, Action, Entity}
 
   def init(applications), do: {:ok, applications}
 
@@ -53,6 +53,10 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, {:run_action, app_name, action_name, params})
   end
 
+  def list_entities(app_name, type) do
+    GenServer.call(__MODULE__, {:list_entities, app_name, type})
+  end
+
   def handle_call(:list_applications, _from, applications),
     do: {:reply, applications, applications}
 
@@ -61,6 +65,11 @@ defmodule Erm.Boundary.ApplicationManager do
       Application.run_action(applications, app_name, action_name, params)
 
     {:reply, to_return, insert_application(applications, application)}
+  end
+
+  def handle_call({:list_entities, app_name, type}, _from, applications) do
+    Application.find_application(applications, app_name)
+    |> Entity.list_entities(type)
   end
 
   defp insert_application(applications, application) do

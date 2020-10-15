@@ -27,4 +27,8 @@ defmodule Erm.Core.Entity do
        | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)
      }, %{}}
   end
+
+  def list_entities(%Application{entities: entities}, type) do
+    Enum.filter(entities, fn entity -> entity.type == type end)
+  end
 end
