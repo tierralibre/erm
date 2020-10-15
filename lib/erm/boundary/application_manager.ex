@@ -57,6 +57,10 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, {:list_entities, app_name, type})
   end
 
+  def get_entity(app_name, uuid) do
+    GenServer.call(__MODULE__, {:get_entity, app_name, uuid})
+  end
+
   def handle_call(:list_applications, _from, applications),
     do: {:reply, applications, applications}
 
@@ -68,8 +72,18 @@ defmodule Erm.Boundary.ApplicationManager do
   end
 
   def handle_call({:list_entities, app_name, type}, _from, applications) do
-    Application.find_application(applications, app_name)
-    |> Entity.list_entities(type)
+    entities =
+      Application.find_application(applications, app_name)
+      |> Entity.list_entities(type)
+
+    {:reply, entities, applications}
+  end
+
+  def handle_call({:get_entity, app_name, uuid}, _from, applications) do
+    entity = Application.find_application(applications, app_name)
+      |> Entity.get_entity(uuid)
+
+    {:reply, entity, applications}
   end
 
   defp insert_application(applications, application) do

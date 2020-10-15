@@ -31,4 +31,8 @@ defmodule Erm.Core.Entity do
   def list_entities(%Application{entities: entities}, type) do
     Enum.filter(entities, fn entity -> entity.type == type end)
   end
+
+  def get_entity(%Application{entities: entities}, uuid) do
+    Enum.find(entities, fn entity -> entity.uuid == uuid end)
+  end
 end
