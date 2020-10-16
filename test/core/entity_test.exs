@@ -19,8 +19,17 @@ defmodule Erm.Core.EntityTest do
     assert List.first(entities).type == :store
   end
 
+  test "entities are listed by type and attributes" do
+    {_st, _pr, _cat, app} = create_locally_entities()
+    entities = Entity.list_entities(app, :product, color: "red")
+    assert length(entities) == 1
+    assert List.first(entities).type == :product
+    entities = Entity.list_entities(app, :product, color: "green")
+    assert length(entities) == 0
+  end
+
   test "entities are found by id" do
     {st, _pr, _cat, app} = create_locally_entities()
-    st = Entity.get_entity(app, st.uuid)
+    assert st == Entity.get_entity(app, st.uuid)
   end
 end

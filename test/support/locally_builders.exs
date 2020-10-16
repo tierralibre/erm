@@ -20,7 +20,7 @@ defmodule LocallyBuilders do
       AddStore.run(Application.new("Application", []), %{name: "Gross Grocery"})
 
     {:ok, application2, %{entity: product}} =
-      AddProduct.run(application1, %{name: "Rotten tomato"})
+      AddProduct.run(application1, %{name: "Rotten tomato", color: "red"})
 
     {:ok, application3, %{entity: category}} =
       AddProductCategory.run(application2, %{name: "Grocery"})

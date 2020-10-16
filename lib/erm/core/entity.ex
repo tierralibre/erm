@@ -42,11 +42,17 @@ defmodule Erm.Core.Entity do
      }, %{entity: updated}}
   end
 
-  def list_entities(%Application{entities: entities}, type) do
-    Enum.filter(entities, fn entity -> entity.type == type end)
+  def list_entities(%Application{entities: entities}, type, equality_field_values \\ []) do
+    Enum.filter(entities, fn entity ->
+      entity.type == type and has_all_field_values?(entity.data, equality_field_values)
+    end)
   end
 
   def get_entity(%Application{entities: entities}, uuid) do
     Enum.find(entities, fn entity -> entity.uuid == uuid end)
+  end
+
+  defp has_all_field_values?(data, equality_map_field_values) do
+    Enum.all?(equality_map_field_values, fn {key, value} -> data[key] == value end)
   end
 end
