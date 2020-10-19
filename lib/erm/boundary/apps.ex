@@ -12,6 +12,7 @@ defmodule Erm.Boundary.Apps do
           Erm.Core.Actions.Locally.AddProductToCategory
         ),
         Action.new(:add_product, :internal, Erm.Core.Actions.Locally.AddProduct),
+        Action.new(:update_product, :internal, Erm.Core.Actions.Locally.UpdateProduct),
         Action.new(:add_stock, :internal, Erm.Core.Actions.Locally.AddStock),
         Action.new(
           :add_product_category,
