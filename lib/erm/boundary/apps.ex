@@ -19,6 +19,11 @@ defmodule Erm.Boundary.Apps do
           Erm.Core.Actions.Locally.AddProductCategory
         ),
         Action.new(
+          :update_product_category,
+          :internal,
+          Erm.Core.Actions.Locally.UpdateProductCategory
+        ),
+        Action.new(
           :remove_product_category,
           :internal,
           Erm.Core.Actions.Locally.RemoveProductCategory
