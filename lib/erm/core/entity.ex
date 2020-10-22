@@ -1,5 +1,6 @@
 defmodule Erm.Core.Entity do
   alias Erm.Core.Application
+  alias Erm.Core.Relation
 
   defstruct [:type, :uuid, :owner, :permissions, :data, :valid_from, :valid_to]
 
@@ -46,6 +47,32 @@ defmodule Erm.Core.Entity do
     Enum.filter(entities, fn entity ->
       entity.type == type and has_all_field_values?(entity.data, equality_field_values)
     end)
+  end
+
+  def list_entities_by_relation(
+        %Application{entities: entities} = application,
+        relation_type,
+        :from,
+        to
+      ) do
+    ids =
+      Relation.list_relations(application, relation_type, %{to: to})
+      |> Enum.map(fn relation -> relation.from end)
+
+    Enum.filter(entities, fn entity -> entity.uuid in ids end)
+  end
+
+  def list_entities_by_relation(
+        %Application{entities: entities} = application,
+        relation_type,
+        :to,
+        from
+      ) do
+    ids =
+      Relation.list_relations(application, relation_type, %{from: from})
+      |> Enum.map(fn relation -> relation.to end)
+
+    Enum.filter(entities, fn entity -> entity.uuid in ids end)
   end
 
   def get_entity(%Application{entities: entities}, uuid) do
