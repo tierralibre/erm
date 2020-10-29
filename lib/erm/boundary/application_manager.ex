@@ -39,6 +39,10 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, {:list_relations, app_name, type, properties})
   end
 
+  def get_relation(app_name, from, to) do
+    GenServer.call(__MODULE__, {:get_relation, app_name, from, to})
+  end
+
   def reset_app(app_name) do
     GenServer.call(__MODULE__, {:reset_app, app_name})
   end
@@ -79,6 +83,14 @@ defmodule Erm.Boundary.ApplicationManager do
       |> Entity.get_entity(uuid)
 
     {:reply, entity, applications}
+  end
+
+  def handle_call({:get_relation, app_name, from, to}, _from, applications) do
+    relation =
+      Application.find_application(applications, app_name)
+      |> Relation.get_relation(from, to)
+
+    {:reply, relation, applications}
   end
 
   def handle_call({:list_relations, app_name, type, properties}, _from, applications) do

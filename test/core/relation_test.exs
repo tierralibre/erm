@@ -31,4 +31,9 @@ defmodule Erm.Core.RelationTest do
     assert length(entities) == 1
     assert List.first(entities).type == :belongs_category
   end
+
+  test "gets relations" do
+    {_st, pr, cat, app} = create_locally_entities_and_relations()
+    assert %Relation{type: :belongs_category} = Relation.get_relation(app, pr.uuid, cat.uuid)
+  end
 end

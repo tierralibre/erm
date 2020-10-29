@@ -62,4 +62,8 @@ defmodule Erm.Core.Relation do
   def list_relations(%Application{relations: relations}, type, %{}) do
     Enum.filter(relations, fn rel -> rel.type == type end)
   end
+
+  def get_relation(%Application{relations: relations}, from, to) do
+    Enum.find(relations, fn rel -> rel.from == from and rel.to == to end)
+  end
 end
