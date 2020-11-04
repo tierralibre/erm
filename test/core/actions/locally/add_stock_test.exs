@@ -16,7 +16,7 @@ defmodule Erm.Core.Actions.Locally.AddStockTest do
 
     product_uuid = product.uuid
     store_uuid = store.uuid
-    data = %{from: product_uuid, to: store_uuid, units: 200, price: "20.34 EUR"}
+    data = %{"from" => product_uuid, "to" => store_uuid, "units" => 200, "price" => "20.34 EUR"}
     {:ok, application, %{}} = AddStock.run(application2, data)
 
     assert %Application{

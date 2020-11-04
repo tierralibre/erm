@@ -28,23 +28,25 @@ defmodule Erm.Core.Relation do
            Enum.filter(relations, fn rel ->
              rel.type != type or rel.from != from or rel.to != to
            end)
-     }, %{}}
+     }, %{relation: Enum.find(relations, fn rel -> rel.to == to and rel.from == from end)}}
   end
 
   def update_relation(%Application{relations: relations} = application, from, to, type, data) do
     rel_to_update =
       Enum.find(relations, fn rel -> rel.type == type and rel.from == from and rel.to == to end)
 
+    new_relation = %__MODULE__{rel_to_update | data: data}
+
     {:ok,
      %Application{
        application
        | relations: [
-           %__MODULE__{rel_to_update | data: data}
+           new_relation
            | Enum.filter(relations, fn rel ->
                rel.type != type or rel.from != from or rel.to != to
              end)
          ]
-     }, %{}}
+     }, %{relation: new_relation}}
   end
 
   def list_relations(%Application{relations: relations}, type, %{from: from, to: to}) do

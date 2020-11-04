@@ -33,10 +33,10 @@ defmodule LocallyBuilders do
 
     {:ok, application2, %{}} =
       AddStock.run(application1, %{
-        from: product.uuid,
-        to: store.uuid,
-        units: 200,
-        price: "20.34 EUR"
+        "from" => product.uuid,
+        "to" => store.uuid,
+        "units" => 200,
+        "price" => "20.34 EUR"
       })
 
     {:ok, application3, %{}} =
