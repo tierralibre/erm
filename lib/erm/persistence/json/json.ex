@@ -16,6 +16,18 @@ defmodule Erm.Persistence.Json do
     |> write_json("#{app_name}.json")
   end
 
+  def remove_entity(app_name, uuid) do
+    read_json("#{app_name}.json")
+    |> remove_entity_from_map(uuid)
+    |> write_json("#{app_name}.json")
+  end
+
+  def remove_relation(app_name, from, to) do
+    read_json("#{app_name}.json")
+    |> remove_relation_from_map(from, to)
+    |> write_json("#{app_name}.json")
+  end
+
   def load_application(%Application{name: name} = application) do
     file_name = "#{name}.json"
     if not File.exists?(file_name) do
@@ -38,6 +50,15 @@ defmodule Erm.Persistence.Json do
     |> insert_relations_into_app(relations)
     |> insert_entities_into_app(entities)
   end
+
+  defp remove_entity_from_map(%{"entities" => entities} = app_map, uuid) do
+    %{ app_map | "entities" => Enum.filter( entities, & &1["uuid"] != uuid) }
+  end
+
+  defp remove_relation_from_map(%{"relations" => relations} = app_map, from, to) do
+    %{ app_map | "relations" => Enum.filter( relations, & not (&1["from"] == from and &1["to"] == to) )  }
+  end
+
 
   defp insert_relations_into_app(application, relations_map) do
     %Application{ application | relations: Enum.map(relations_map, & map_to_relation(&1))}

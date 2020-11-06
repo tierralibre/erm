@@ -22,6 +22,8 @@ defmodule Erm.Core.Relation do
   end
 
   def remove_relation(%Application{relations: relations} = application, from, to, type) do
+    relation = Enum.find(relations, fn rel -> rel.to == to and rel.from == from end)
+    application.persistence.remove_relation(application.name, relation.from, relation.to)
     {:ok,
      %Application{
        application
@@ -29,7 +31,7 @@ defmodule Erm.Core.Relation do
            Enum.filter(relations, fn rel ->
              rel.type != type or rel.from != from or rel.to != to
            end)
-     }, %{relation: Enum.find(relations, fn rel -> rel.to == to and rel.from == from end)}}
+     }, %{relation: relation}}
   end
 
   def update_relation(%Application{relations: relations} = application, from, to, type, data) do

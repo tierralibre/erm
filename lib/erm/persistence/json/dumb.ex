@@ -12,6 +12,14 @@ defmodule Erm.Persistence.Dumb do
     :ok
   end
 
+  def remove_entity(_app_name, _uuid) do
+    :ok
+  end
+
+  def remove_relation(_app_name, _from, _to) do
+    :ok
+  end
+
   def load_application(%Application{} = application) do
     {:ok, application}
   end

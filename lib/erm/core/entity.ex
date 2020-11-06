@@ -23,11 +23,13 @@ defmodule Erm.Core.Entity do
   end
 
   def remove_entity(%Application{entities: entities} = application, uuid) do
+    entity = Enum.find(entities, fn entity -> entity.uuid == uuid end)
+    application.persistence.remove_entity(application.name, entity.uuid)
     {:ok,
      %Application{
        application
        | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)
-     }, %{entity: Enum.find(entities, fn entity -> entity.uuid == uuid end)}}
+     }, %{entity: entity}}
   end
 
   def update_entity(%Application{entities: entities} = application, uuid, data) do
