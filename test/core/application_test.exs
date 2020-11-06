@@ -6,7 +6,7 @@ defmodule Erm.Core.ApplicationTest do
 
   test "new applications are created" do
     assert %Application{name: @app_name, entities: [], relations: [], actions: []} =
-             Application.new(@app_name, [])
+             Application.new(@app_name, [], Erm.Persistence.Dumb)
   end
 
   test "applications are found" do

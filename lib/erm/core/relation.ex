@@ -17,6 +17,7 @@ defmodule Erm.Core.Relation do
 
   def add_relation(%Application{relations: relations} = application, from, to, type, data) do
     new_rel = new(%{type: type, from: from, to: to, data: data})
+    application.persistence.save_relation(application.name, new_rel)
     {:ok, %Application{application | relations: relations ++ [new_rel]}, %{relation: new_rel}}
   end
 
@@ -36,6 +37,7 @@ defmodule Erm.Core.Relation do
       Enum.find(relations, fn rel -> rel.type == type and rel.from == from and rel.to == to end)
 
     new_relation = %__MODULE__{rel_to_update | data: data}
+    application.persistence.save_relation(application.name, new_relation)
 
     {:ok,
      %Application{

@@ -9,7 +9,7 @@ defmodule Erm.Core.Actions.Locally.AddStockTest do
 
   test "can add stock is added to the application" do
     data = %{name: "Gross Grocery"}
-    {:ok, application1, %{entity: store}} = AddStore.run(Application.new("Application", []), data)
+    {:ok, application1, %{entity: store}} = AddStore.run(Application.new("Application", [], Erm.Persistence.Dumb), data)
 
     data = %{name: "Rotten tomato"}
     {:ok, application2, %{entity: product}} = AddProduct.run(application1, data)

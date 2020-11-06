@@ -18,6 +18,7 @@ defmodule Erm.Core.Entity do
 
   def add_entity(%Application{entities: entities} = application, type, data) do
     new_ent = new(%{type: type, data: data})
+    application.persistence.save_entity(application.name, new_ent)
     {:ok, %Application{application | entities: entities ++ [new_ent]}, %{entity: new_ent}}
   end
 
@@ -31,6 +32,7 @@ defmodule Erm.Core.Entity do
 
   def update_entity(%Application{entities: entities} = application, uuid, data) do
     ent_to_update = Enum.find(entities, fn entity -> entity.uuid == uuid end)
+    application.persistence.save_entity(application.name, ent_to_update)
     updated = %__MODULE__{ent_to_update | data: data}
 
     {:ok,

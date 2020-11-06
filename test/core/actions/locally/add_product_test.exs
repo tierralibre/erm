@@ -6,7 +6,7 @@ defmodule Erm.Core.Actions.Locally.AddProductTest do
 
   test "product is added to the application" do
     data = %{name: "happy tshirt"}
-    {:ok, application, %{}} = AddProduct.run(Application.new("Application", []), data)
+    {:ok, application, %{}} = AddProduct.run(Application.new("Application", [], Erm.Persistence.Dumb), data)
     assert %Application{entities: [%Entity{type: :product, data: data}]} = application
   end
 end

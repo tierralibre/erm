@@ -11,7 +11,7 @@ defmodule Erm.Core.Actions.Locally.AddProductToCategoryTest do
     data = %{name: "happy tshirt"}
 
     {:ok, application1, %{entity: product}} =
-      AddProduct.run(Application.new("Application", []), data)
+      AddProduct.run(Application.new("Application", [], Erm.Persistence.Dumb), data)
 
     data = %{name: "Grocery"}
     {:ok, application2, %{entity: category}} = AddProductCategory.run(application1, data)

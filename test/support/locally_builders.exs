@@ -17,7 +17,7 @@ defmodule LocallyBuilders do
 
   def create_locally_entities do
     {:ok, application1, %{entity: store}} =
-      AddStore.run(Application.new("Application", []), %{name: "Gross Grocery"})
+      AddStore.run(Application.new("Application", [], Erm.Persistence.Dumb), %{name: "Gross Grocery"})
 
     {:ok, application2, %{entity: product}} =
       AddProduct.run(application1, %{name: "Rotten tomato", color: "red"})

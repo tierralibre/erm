@@ -24,8 +24,8 @@ defmodule CoreBuilders do
 
   def applications do
     [
-      Application.new("Pelikan inks", dumb_actions()),
-      Application.new("Karkos inks", dumb_actions())
+      Application.new("Pelikan inks", dumb_actions(), Erm.Persistence.Dumb),
+      Application.new("Karkos inks", dumb_actions(), Erm.Persistence.Dumb)
     ]
   end
 

@@ -10,9 +10,16 @@ defmodule Erm.Boundary.ApplicationManager do
     do: GenServer.start_link(__MODULE__, applications, name: __MODULE__)
 
   def registered_applications do
+    {:ok , app} =
+      Application.new("Locally", Apps.get_actions("Locally"), Erm.Persistence.Json)
+      |> load()
     [
-      Application.new("Locally", Apps.get_actions("Locally"))
+      app
     ]
+  end
+
+  defp load(application) do
+    application.persistence.load_application(application)
   end
 
   def list_applications do
@@ -105,7 +112,7 @@ defmodule Erm.Boundary.ApplicationManager do
     {:reply, :ok,
      insert_application(
        applications,
-       Application.new(app_name, Apps.get_actions(app_name))
+       Application.new(app_name, Apps.get_actions(app_name), Erm.Persistence.Json)
      )}
   end
 

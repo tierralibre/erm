@@ -1,10 +1,10 @@
 defmodule Erm.Core.Application do
   alias Erm.Core.Action
 
-  defstruct [:name, :entities, :relations, :actions]
+  defstruct [:name, :entities, :relations, :actions, :persistence]
 
-  def new(app_name, actions) do
-    %__MODULE__{name: app_name, entities: [], relations: [], actions: actions}
+  def new(app_name, actions, persistence) do
+    %__MODULE__{name: app_name, entities: [], relations: [], actions: actions, persistence: persistence}
   end
 
   def find_application(applications, app_name) do

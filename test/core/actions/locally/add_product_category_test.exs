@@ -6,7 +6,7 @@ defmodule Erm.Core.Actions.Locally.AddProductCategoryTest do
 
   test "product category is added to the application" do
     data = %{name: "Grocery"}
-    {:ok, application, %{}} = AddProductCategory.run(Application.new("Application", []), data)
+    {:ok, application, %{}} = AddProductCategory.run(Application.new("Application", [], Erm.Persistence.Dumb), data)
     assert %Application{entities: [%Entity{type: :product_category, data: data}]} = application
   end
 end

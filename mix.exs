@@ -22,7 +22,8 @@ defmodule Erm.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:jason, "~> 1.0"}
     ]
   end
 end
