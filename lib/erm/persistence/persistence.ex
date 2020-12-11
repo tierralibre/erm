@@ -4,10 +4,18 @@ defmodule Erm.Persistence do
   @type uuid :: binary
   @type from :: binary
   @type to :: binary
+  @type type :: binary
+  @type relation_type :: :from | :to
 
-  @callback save_entity(app_name, %Entity{}) :: :ok | :error
-  @callback remove_entity(app_name, uuid) :: :ok | :error
-  @callback save_relation(app_name, %Relation{}) :: :ok | :error
-  @callback remove_relation(app_name, from, to) :: :ok | :error
-  @callback load_application(%Application{}) :: {:ok, %Application{}} | {:error, binary}
+  @callback save_entity(app_name, map) :: {:ok, %Entity{}} | :error
+  @callback remove_entity(app_name, uuid) :: {:ok, %Entity{}} | :error
+  @callback save_relation(app_name, %Relation{}) :: {:ok, %Relation{}} | :error
+  @callback remove_relation(app_name, from, to, type) :: {:ok, %Relation{}} | :error
+  @callback load_application(%Application{}) :: {:ok, %Application{}} | :error
+
+  @callback get_relation(app_name, type, from, to) :: %Relation{} | nil
+  @callback list_relations(app_name, type, map) :: [%Relation{}]
+  @callback list_entities(app_name, type, map) :: [%Entity{}]
+  @callback list_entities_by_relation(app_name, type, relation_type, to) :: [%Entity{}]
+  @callback get_entity(app_name, uuid) :: %Entity{} | nil
 end

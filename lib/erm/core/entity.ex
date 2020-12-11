@@ -1,89 +1,57 @@
 defmodule Erm.Core.Entity do
   alias Erm.Core.Application
-  alias Erm.Core.Relation
 
-  defstruct [:type, :uuid, :owner, :permissions, :data, :valid_from, :valid_to]
+  defstruct [:type, :id, :data]
 
   def new(%{type: type, data: data}) do
     %__MODULE__{
       type: type,
-      uuid: UUID.uuid1(),
-      owner: nil,
-      permissions: nil,
-      data: data,
-      valid_from: :os.system_time(:millisecond),
-      valid_to: nil
+      id: nil,
+      data: data
     }
   end
 
-  def add_entity(%Application{entities: entities} = application, type, data) do
+  def add_entity(%Application{} = application, type, data) do
     new_ent = new(%{type: type, data: data})
-    application.persistence.save_entity(application.name, new_ent)
-    {:ok, %Application{application | entities: entities ++ [new_ent]}, %{entity: new_ent}}
+    {:ok, saved_rel} = application.persistence.save_entity(application.name, new_ent)
+    {:ok, application, %{entity: saved_rel}}
   end
 
-  def remove_entity(%Application{entities: entities} = application, uuid) do
-    entity = Enum.find(entities, fn entity -> entity.uuid == uuid end)
-    application.persistence.remove_entity(application.name, entity.uuid)
-    {:ok,
-     %Application{
-       application
-       | entities: Enum.filter(entities, fn entity -> entity.uuid != uuid end)
-     }, %{entity: entity}}
+  def remove_entity(%Application{} = application, uuid) do
+    {:ok, rem_entity} = application.persistence.remove_entity(application.name, uuid)
+    {:ok, application, %{entity: rem_entity}}
   end
 
-  def update_entity(%Application{entities: entities} = application, uuid, data) do
-    ent_to_update = Enum.find(entities, fn entity -> entity.uuid == uuid end)
-    application.persistence.save_entity(application.name, ent_to_update)
-    updated = %__MODULE__{ent_to_update | data: data}
+  def update_entity(%Application{} = application, uuid, data) do
+    {:ok, updated_ent} =
+      application.persistence.save_entity(application.name, %{id: uuid, data: data})
 
-    {:ok,
-     %Application{
-       application
-       | entities: [
-           updated
-           | Enum.filter(entities, fn entity -> entity.uuid != uuid end)
-         ]
-     }, %{entity: updated}}
+    {:ok, application, %{entity: updated_ent}}
   end
 
-  def list_entities(%Application{entities: entities}, type, equality_field_values \\ []) do
-    Enum.filter(entities, fn entity ->
-      entity.type == type and has_all_field_values?(entity.data, equality_field_values)
-    end)
+  def list_entities(%Application{name: app_name} = application, type, equality_field_values \\ []) do
+    application.persistence.list_entities(app_name, type, equality_field_values)
   end
 
   def list_entities_by_relation(
-        %Application{entities: entities} = application,
+        %Application{name: app_name} = application,
         relation_type,
         :from,
         to
       ) do
-    ids =
-      Relation.list_relations(application, relation_type, %{to: to})
-      |> Enum.map(fn relation -> relation.from end)
-
-    Enum.filter(entities, fn entity -> entity.uuid in ids end)
+    application.persistence.list_entities_by_relation(app_name, relation_type, :from, to)
   end
 
   def list_entities_by_relation(
-        %Application{entities: entities} = application,
+        %Application{name: app_name} = application,
         relation_type,
         :to,
         from
       ) do
-    ids =
-      Relation.list_relations(application, relation_type, %{from: from})
-      |> Enum.map(fn relation -> relation.to end)
-
-    Enum.filter(entities, fn entity -> entity.uuid in ids end)
+    application.persistence.list_entities_by_relation(app_name, relation_type, :to, from)
   end
 
-  def get_entity(%Application{entities: entities}, uuid) do
-    Enum.find(entities, fn entity -> entity.uuid == uuid end)
-  end
-
-  defp has_all_field_values?(data, equality_map_field_values) do
-    Enum.all?(equality_map_field_values, fn {key, value} -> data[key] == value end)
+  def get_entity(%Application{name: app_name} = application, uuid) do
+    application.persistence.get_entity(app_name, uuid)
   end
 end

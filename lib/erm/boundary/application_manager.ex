@@ -10,9 +10,10 @@ defmodule Erm.Boundary.ApplicationManager do
     do: GenServer.start_link(__MODULE__, applications, name: __MODULE__)
 
   def registered_applications do
-    {:ok , app} =
-      Application.new("Locally", Apps.get_actions("Locally"), Erm.Persistence.Json)
+    {:ok, app} =
+      Application.new("Locally", Apps.get_actions("Locally"), Erm.Persistence.Ecto)
       |> load()
+
     [
       app
     ]
@@ -46,8 +47,8 @@ defmodule Erm.Boundary.ApplicationManager do
     GenServer.call(__MODULE__, {:list_relations, app_name, type, properties})
   end
 
-  def get_relation(app_name, from, to) do
-    GenServer.call(__MODULE__, {:get_relation, app_name, from, to})
+  def get_relation(app_name, type, from, to) do
+    GenServer.call(__MODULE__, {:get_relation, app_name, type, from, to})
   end
 
   def reset_app(app_name) do
@@ -92,10 +93,10 @@ defmodule Erm.Boundary.ApplicationManager do
     {:reply, entity, applications}
   end
 
-  def handle_call({:get_relation, app_name, from, to}, _from, applications) do
+  def handle_call({:get_relation, app_name, type, from, to}, _from, applications) do
     relation =
       Application.find_application(applications, app_name)
-      |> Relation.get_relation(from, to)
+      |> Relation.get_relation(type, from, to)
 
     {:reply, relation, applications}
   end

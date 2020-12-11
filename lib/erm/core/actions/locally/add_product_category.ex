@@ -6,6 +6,6 @@ defmodule Erm.Core.Actions.Locally.AddProductCategory do
   @behaviour ActionImpl
 
   def run(%Application{} = application, data) do
-    Entity.add_entity(application, :product_category, data)
+    Entity.add_entity(application, "product_category", data)
   end
 end

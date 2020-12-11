@@ -9,6 +9,7 @@ defmodule Erm.Application do
 
   def start(_type, _args) do
     children = [
+      Erm.Repo,
       {ApplicationManager, ApplicationManager.registered_applications()}
     ]
 

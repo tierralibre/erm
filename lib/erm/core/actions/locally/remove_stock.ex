@@ -6,6 +6,6 @@ defmodule Erm.Core.Actions.Locally.RemoveStock do
   @behaviour ActionImpl
 
   def run(%Application{} = application, %{from: from, to: to}) do
-    Relation.remove_relation(application, from, to, :stock)
+    Relation.remove_relation(application, from, to, "stock")
   end
 end

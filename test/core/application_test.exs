@@ -2,10 +2,15 @@ defmodule Erm.Core.ApplicationTest do
   use ExUnit.Case
   use CoreBuilders
 
+  setup do
+    # Explicitly get a connection before each test
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Erm.Repo)
+  end
+
   @app_name "App name"
 
   test "new applications are created" do
-    assert %Application{name: @app_name, entities: [], relations: [], actions: []} =
+    assert %Application{name: @app_name, actions: []} =
              Application.new(@app_name, [], Erm.Persistence.Dumb)
   end
 

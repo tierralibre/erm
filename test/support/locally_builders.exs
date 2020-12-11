@@ -17,13 +17,15 @@ defmodule LocallyBuilders do
 
   def create_locally_entities do
     {:ok, application1, %{entity: store}} =
-      AddStore.run(Application.new("Application", [], Erm.Persistence.Dumb), %{name: "Gross Grocery"})
+      AddStore.run(Application.new("Application", [], Erm.Persistence.Ecto), %{
+        "name" => "Gross Grocery"
+      })
 
     {:ok, application2, %{entity: product}} =
-      AddProduct.run(application1, %{name: "Rotten tomato", color: "red"})
+      AddProduct.run(application1, %{"name" => "Rotten tomato", "color" => "red"})
 
     {:ok, application3, %{entity: category}} =
-      AddProductCategory.run(application2, %{name: "Grocery"})
+      AddProductCategory.run(application2, %{"name" => "Grocery"})
 
     {store, product, category, application3}
   end
@@ -33,14 +35,14 @@ defmodule LocallyBuilders do
 
     {:ok, application2, %{}} =
       AddStock.run(application1, %{
-        "from" => product.uuid,
-        "to" => store.uuid,
+        "from" => product.id,
+        "to" => store.id,
         "units" => 200,
         "price" => "20.34 EUR"
       })
 
     {:ok, application3, %{}} =
-      AddProductToCategory.run(application2, %{from: product.uuid, to: category.uuid})
+      AddProductToCategory.run(application2, %{from: product.id, to: category.id})
 
     {store, product, category, application3}
   end

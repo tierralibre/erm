@@ -6,6 +6,6 @@ defmodule Erm.Core.Actions.Locally.RemoveProductFromCategory do
   @behaviour ActionImpl
 
   def run(%Application{} = application, %{from: from, to: to}) do
-    Relation.remove_relation(application, from, to, :belongs_category)
+    Relation.remove_relation(application, from, to, "belongs_category")
   end
 end

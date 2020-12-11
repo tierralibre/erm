@@ -6,6 +6,6 @@ defmodule Erm.Core.Actions.Locally.AddProductToCategory do
   @behaviour ActionImpl
 
   def run(%Application{} = application, %{from: from, to: to} = data) do
-    Relation.add_relation(application, from, to, :belongs_category, data)
+    Relation.add_relation(application, from, to, "belongs_category", data)
   end
 end

@@ -6,6 +6,6 @@ defmodule Erm.Core.Actions.Locally.UpdateStock do
   @behaviour ActionImpl
 
   def run(%Application{} = application, %{from: from, to: to, data: data}) do
-    Relation.update_relation(application, from, to, :stock, data)
+    Relation.update_relation(application, from, to, "stock", data)
   end
 end
