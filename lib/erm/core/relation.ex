@@ -29,11 +29,11 @@ defmodule Erm.Core.Relation do
     {:ok, application, %{relation: saved_rel}}
   end
 
-  def list_relations(%Application{name: app_name} = application, type, query) do
-    application.persistence.list_relations(app_name, type, query)
+  def list_relations(app_name, persistence, type, query) do
+    persistence.list_relations(app_name, type, query)
   end
 
-  def get_relation(%Application{name: app_name} = application, type, from, to) do
-    application.persistence.get_relation(app_name, type, from, to)
+  def get_relation(app_name, persistence, type, from, to) do
+    persistence.get_relation(app_name, type, from, to)
   end
 end

@@ -45,4 +45,8 @@ defmodule Erm.Boundary.Apps do
   def get_actions(app_name) do
     Map.get(registered_actions(), app_name, [])
   end
+
+  def get_persistence(_app_name) do
+    Erm.Persistence.Ecto
+  end
 end

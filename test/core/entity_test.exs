@@ -17,28 +17,28 @@ defmodule Erm.Core.EntityTest do
 
   test "entities are listed by type" do
     {_st, _pr, _cat, app} = create_locally_entities()
-    entities = Entity.list_entities(app, "store")
+    entities = Entity.list_entities(app.name, app.persistence, "store")
     assert length(entities) == 1
     assert List.first(entities).type == "store"
   end
 
   test "entities are listed by type and attributes" do
     {_st, _pr, _cat, app} = create_locally_entities()
-    entities = Entity.list_entities(app, "product", [{"color", "red"}])
+    entities = Entity.list_entities(app.name, app.persistence, "product", [{"color", "red"}])
     assert length(entities) == 1
     assert List.first(entities).type == "product"
-    entities = Entity.list_entities(app, "product", [{"color", "green"}])
+    entities = Entity.list_entities(app.name, app.persistence, "product", [{"color", "green"}])
     assert length(entities) == 0
   end
 
   test "entities are found by id" do
     {st, _pr, _cat, app} = create_locally_entities()
-    assert st == Entity.get_entity(app, st.id)
+    assert st == Entity.get_entity(app.name, app.persistence, st.id)
   end
 
   test "entities are found by relation" do
     {_st, pr, cat, app} = create_locally_entities_and_relations()
-    entities = Entity.list_entities_by_relation(app, "belongs_category", :to, pr.id)
+    entities = Entity.list_entities_by_relation(app.name, app.persistence, "belongs_category", :to, pr.id)
     assert length(entities) == 1
     assert List.first(entities) == cat
   end

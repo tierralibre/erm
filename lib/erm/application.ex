@@ -5,12 +5,9 @@ defmodule Erm.Application do
 
   use Application
 
-  alias Erm.Boundary.ApplicationManager
-
   def start(_type, _args) do
     children = [
-      Erm.Repo,
-      {ApplicationManager, ApplicationManager.registered_applications()}
+      Erm.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

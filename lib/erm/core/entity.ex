@@ -29,29 +29,30 @@ defmodule Erm.Core.Entity do
     {:ok, application, %{entity: updated_ent}}
   end
 
-  def list_entities(%Application{name: app_name} = application, type, equality_field_values \\ []) do
-    application.persistence.list_entities(app_name, type, equality_field_values)
+  def list_entities(app_name, persistence, type, equality_field_values \\ []) do
+    persistence.list_entities(app_name, type, equality_field_values)
   end
 
   def list_entities_by_relation(
-        %Application{name: app_name} = application,
+        app_name,
+        persistence,
         relation_type,
         :from,
         to
       ) do
-    application.persistence.list_entities_by_relation(app_name, relation_type, :from, to)
+    persistence.list_entities_by_relation(app_name, relation_type, :from, to)
   end
 
   def list_entities_by_relation(
-        %Application{name: app_name} = application,
+        app_name, persistence,
         relation_type,
         :to,
         from
       ) do
-    application.persistence.list_entities_by_relation(app_name, relation_type, :to, from)
+    persistence.list_entities_by_relation(app_name, relation_type, :to, from)
   end
 
-  def get_entity(%Application{name: app_name} = application, uuid) do
-    application.persistence.get_entity(app_name, uuid)
+  def get_entity(app_name, persistence, uuid) do
+    persistence.get_entity(app_name, uuid)
   end
 end
