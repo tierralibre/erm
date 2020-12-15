@@ -18,7 +18,8 @@ defmodule LocallyBuilders do
   def create_locally_entities do
     {:ok, application1, %{entity: store}} =
       AddStore.run(Application.new("Application", [], Erm.Persistence.Ecto), %{
-        "name" => "Gross Grocery"
+        "name" => "Gross Grocery",
+        "h3index" => "891fb466257ffff"
       })
 
     {:ok, application2, %{entity: product}} =

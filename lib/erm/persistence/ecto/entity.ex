@@ -4,8 +4,10 @@ defmodule Erm.Persistence.Entity do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_fields [:type, :app, :data]
+  @fields [:h3index]++@required_fields
 
   schema "entities" do
+    field(:h3index, H3.PostGIS.H3Index)
     field(:app, :string)
     field(:type, :string)
     field(:data, :map)
@@ -18,7 +20,7 @@ defmodule Erm.Persistence.Entity do
   """
   def changeset(model, params) do
     model
-    |> cast(params, @required_fields)
+    |> cast(params, @fields)
     |> validate_required(@required_fields)
   end
 

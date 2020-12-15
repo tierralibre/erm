@@ -3,7 +3,7 @@ defmodule Erm.Core.ActionTest do
   use CoreBuilders
 
   test "actions can be created" do
-    assert %Action{name: :dumb_action, type: internal} = dumb_action()
+    assert %Action{name: :dumb_action, type: _internal} = dumb_action()
   end
 
   test "execution of action" do

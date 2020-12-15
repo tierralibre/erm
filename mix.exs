@@ -25,7 +25,9 @@ defmodule Erm.MixProject do
     [
       {:jason, "~> 1.0"},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:geo_postgis, "~> 3.3"},
+      {:h3, "~> 3.6"}
     ]
   end
 

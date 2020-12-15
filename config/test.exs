@@ -5,4 +5,6 @@ config :erm, Erm.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
+  port: 15432,
+  types: Erm.PostgresTypes,
   pool: Ecto.Adapters.SQL.Sandbox
