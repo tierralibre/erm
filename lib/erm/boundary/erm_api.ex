@@ -1,4 +1,4 @@
-defmodule Erm.Boundary.ApplicationManager do
+defmodule Erm.Boundary.ErmApi do
 
   alias Erm.Core.{Application, Entity, Relation}
   alias Erm.Boundary.Apps
