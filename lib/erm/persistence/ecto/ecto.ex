@@ -7,12 +7,13 @@ defmodule Erm.Persistence.Ecto do
 
   @behaviour Persistence
 
-  def save_entity(app_name, %{id: nil} = entity) do
+  def save_entity(app_name, entity, repo\\Repo)
+  def save_entity(app_name, %{id: nil} = entity, repo) do
     insert =
       entity
       |> Map.put(:app, app_name)
       |> Entity.new()
-      |> Repo.insert()
+      |> repo.insert()
 
     case insert do
       {:ok, ent} -> {:ok, Entity.to_core_entity(ent)}
@@ -20,11 +21,11 @@ defmodule Erm.Persistence.Ecto do
     end
   end
 
-  def save_entity(_app_name, %{id: uuid} = entity) do
+  def save_entity(_app_name, %{id: uuid} = entity, repo) do
     update =
-      Erm.Repo.get(Entity, uuid)
+      repo.get(Entity, uuid)
       |> Entity.changeset(entity)
-      |> Repo.update()
+      |> repo.update()
 
     case update do
       {:ok, ent} -> {:ok, Entity.to_core_entity(ent)}
@@ -32,7 +33,7 @@ defmodule Erm.Persistence.Ecto do
     end
   end
 
-  def save_relation(app_name, %Erm.Core.Relation{from: from, to: to, type: type} = relation) do
+  def save_relation(app_name, %Erm.Core.Relation{from: from, to: to, type: type} = relation, repo\\Repo) do
     persisted_entity = Repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
 
     saved_entity =
@@ -40,12 +41,12 @@ defmodule Erm.Persistence.Ecto do
         nil ->
           %Relation{app: app_name}
           |> Relation.changeset(relation |> Map.from_struct())
-          |> Repo.insert()
+          |> repo.insert()
 
         _ ->
           persisted_entity
           |> Relation.changeset(relation |> Map.from_struct())
-          |> Repo.update()
+          |> repo.update()
       end
 
     case saved_entity do
@@ -54,28 +55,28 @@ defmodule Erm.Persistence.Ecto do
     end
   end
 
-  def remove_entity(_app_name, uuid) do
-    entity = Repo.get(Entity, uuid)
+  def remove_entity(_app_name, uuid, repo\\Repo) do
+    entity = repo.get(Entity, uuid)
 
     case entity do
       nil ->
         :error
 
       _ ->
-        entity |> Repo.delete()
+        entity |> repo.delete()
         {:ok, Entity.to_core_entity(entity)}
     end
   end
 
-  def remove_relation(app_name, type, from, to) do
-    rel = Repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
+  def remove_relation(app_name, type, from, to, repo\\Repo) do
+    rel = repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
 
     case rel do
       nil ->
         :error
 
       _ ->
-        rel |> Repo.delete()
+        rel |> repo.delete()
         {:ok, Relation.to_core_relation(rel)}
     end
   end
