@@ -38,7 +38,10 @@ defmodule Erm.Core.EntityTest do
 
   test "entities are found by relation" do
     {_st, pr, cat, app} = create_locally_entities_and_relations()
-    entities = Entity.list_entities_by_relation(app.name, app.persistence, "belongs_category", :to, pr.id)
+
+    entities =
+      Entity.list_entities_by_relation(app.name, app.persistence, "belongs_category", :to, pr.id)
+
     assert length(entities) == 1
     assert List.first(entities) == cat
   end

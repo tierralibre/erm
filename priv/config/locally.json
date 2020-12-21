@@ -1,0 +1,25 @@
+{
+    "app_name": "Locally",
+    "actions": [
+        {
+            "name": "add_store",
+            "type": "instructions",
+            "input": {"seller": "id", "store": "map"},
+            "instructions": [
+                {"instruction": "add_entity", "type": "store", "data": "store", "name": "new_store"},
+                {"instruction": "add_relation", "type": "seller_owns_store", "from": "seller", "to": "new_store", "name": "new_ownership"}
+            ],
+            "output": {"entity": "new_store"}
+        },
+        {
+            "name": "add_product",
+            "type": "instructions",
+            "input": {"store":"id", "product":"map"},
+            "instructions": [
+                {"instruction": "add_entity", "type": "product", "data": "product", "name": "new_product"},
+                {"instruction": "add_relation", "type": "store_sells_product", "from": "store", "to": "new_product", "name": "new_sell"}
+            ],
+            "output": {"entity": "new_product"}
+        }
+    ]
+}

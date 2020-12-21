@@ -4,7 +4,7 @@ defmodule Erm.Persistence.Entity do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_fields [:type, :app, :data]
-  @fields [:h3index]++@required_fields
+  @fields [:h3index] ++ @required_fields
 
   schema "entities" do
     field(:h3index, H3.PostGIS.H3Index)

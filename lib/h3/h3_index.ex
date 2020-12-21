@@ -23,6 +23,7 @@ if Code.ensure_loaded?(Ecto.Type) do
     def dump(h3_index) when is_binary(h3_index) do
       {:ok, h3_index}
     end
+
     def dump(_), do: :error
 
     def cast({:ok, value}), do: cast(value)

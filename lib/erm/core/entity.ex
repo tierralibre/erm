@@ -21,7 +21,7 @@ defmodule Erm.Core.Entity do
     }
   end
 
-  def add_entity(%Application{} = application, type, data, h3index\\nil) do
+  def add_entity(%Application{} = application, type, data, h3index \\ nil) do
     new_ent = new(%{type: type, data: data, h3index: h3index})
     {:ok, saved_rel} = application.persistence.save_entity(application.name, new_ent)
     {:ok, application, %{entity: saved_rel}}
@@ -32,9 +32,13 @@ defmodule Erm.Core.Entity do
     {:ok, application, %{entity: rem_entity}}
   end
 
-  def update_entity(%Application{} = application, uuid, data, h3index\\nil) do
+  def update_entity(%Application{} = application, uuid, data, h3index \\ nil) do
     {:ok, updated_ent} =
-      application.persistence.save_entity(application.name, %{id: uuid, data: data, h3index: h3index})
+      application.persistence.save_entity(application.name, %{
+        id: uuid,
+        data: data,
+        h3index: h3index
+      })
 
     {:ok, application, %{entity: updated_ent}}
   end
@@ -54,7 +58,8 @@ defmodule Erm.Core.Entity do
   end
 
   def list_entities_by_relation(
-        app_name, persistence,
+        app_name,
+        persistence,
         relation_type,
         :to,
         from

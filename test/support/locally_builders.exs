@@ -6,45 +6,43 @@ defmodule LocallyBuilders do
   end
 
   alias Erm.Core.Application
-
-  alias Erm.Core.Actions.Locally.{
-    AddStore,
-    AddProduct,
-    AddProductCategory,
-    AddStock,
-    AddProductToCategory
-  }
+  alias Erm.Core.Relation
+  alias Erm.Core.Entity
 
   def create_locally_entities do
-    {:ok, application1, %{entity: store}} =
-      AddStore.run(Application.new("Application", [], Erm.Persistence.Ecto), %{
-        "name" => "Gross Grocery",
-        "h3index" => "891fb466257ffff"
-      })
+    application = Application.new("Application", [], Erm.Persistence.Ecto)
 
-    {:ok, application2, %{entity: product}} =
-      AddProduct.run(application1, %{"name" => "Rotten tomato", "color" => "red"})
+    {:ok, _app, %{entity: store}} =
+      Entity.add_entity(
+        application,
+        "store",
+        %{
+          "name" => "Gross Grocery"
+        },
+        "891fb466257ffff"
+      )
 
-    {:ok, application3, %{entity: category}} =
-      AddProductCategory.run(application2, %{"name" => "Grocery"})
+    {:ok, _app, %{entity: product}} =
+      Entity.add_entity(application, "product", %{"name" => "Rotten tomato", "color" => "red"})
 
-    {store, product, category, application3}
+    {:ok, _app, %{entity: category}} =
+      Entity.add_entity(application, "product_category", %{"name" => "Grocery"})
+
+    {store, product, category, application}
   end
 
   def create_locally_entities_and_relations do
-    {store, product, category, application1} = create_locally_entities()
+    {store, product, category, application} = create_locally_entities()
 
-    {:ok, application2, %{}} =
-      AddStock.run(application1, %{
-        "from" => product.id,
-        "to" => store.id,
+    {:ok, _app, %{}} =
+      Relation.add_relation(application, product.id, store.id, "stock", %{
         "units" => 200,
         "price" => "20.34 EUR"
       })
 
-    {:ok, application3, %{}} =
-      AddProductToCategory.run(application2, %{from: product.id, to: category.id})
+    {:ok, _app, %{}} =
+      Relation.add_relation(application, product.id, category.id, "belongs_category", %{})
 
-    {store, product, category, application3}
+    {store, product, category, application}
   end
 end

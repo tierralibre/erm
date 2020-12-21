@@ -7,7 +7,8 @@ defmodule Erm.Persistence.Ecto do
 
   @behaviour Persistence
 
-  def save_entity(app_name, entity, repo\\Repo)
+  def save_entity(app_name, entity, repo \\ Repo)
+
   def save_entity(app_name, %{id: nil} = entity, repo) do
     insert =
       entity
@@ -17,7 +18,7 @@ defmodule Erm.Persistence.Ecto do
 
     case insert do
       {:ok, ent} -> {:ok, Entity.to_core_entity(ent)}
-      _ -> :error
+      _ -> {:error, "Error"}
     end
   end
 
@@ -29,11 +30,15 @@ defmodule Erm.Persistence.Ecto do
 
     case update do
       {:ok, ent} -> {:ok, Entity.to_core_entity(ent)}
-      _ -> :error
+      _ -> {:error, "Error"}
     end
   end
 
-  def save_relation(app_name, %Erm.Core.Relation{from: from, to: to, type: type} = relation, repo\\Repo) do
+  def save_relation(
+        app_name,
+        %Erm.Core.Relation{from: from, to: to, type: type} = relation,
+        repo \\ Repo
+      ) do
     persisted_entity = Repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
 
     saved_entity =
@@ -51,16 +56,16 @@ defmodule Erm.Persistence.Ecto do
 
     case saved_entity do
       {:ok, _ent} -> {:ok, relation}
-      _whatever -> :error
+      _whatever -> {:error, "Error"}
     end
   end
 
-  def remove_entity(_app_name, uuid, repo\\Repo) do
+  def remove_entity(_app_name, uuid, repo \\ Repo) do
     entity = repo.get(Entity, uuid)
 
     case entity do
       nil ->
-        :error
+        {:error, "Error"}
 
       _ ->
         entity |> repo.delete()
@@ -68,12 +73,12 @@ defmodule Erm.Persistence.Ecto do
     end
   end
 
-  def remove_relation(app_name, type, from, to, repo\\Repo) do
+  def remove_relation(app_name, type, from, to, repo \\ Repo) do
     rel = repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
 
     case rel do
       nil ->
-        :error
+        {:error, "Error"}
 
       _ ->
         rel |> repo.delete()
@@ -114,8 +119,10 @@ defmodule Erm.Persistence.Ecto do
   end
 
   def get_relation(app_name, type, from, to) do
-    Repo.get_by(Relation, app: app_name, from: from, to: to, type: type)
-    |> Relation.to_core_relation()
+    case Repo.get_by(Relation, app: app_name, from: from, to: to, type: type) do
+      nil -> nil
+      relation -> relation |> Relation.to_core_relation()
+    end
   end
 
   def list_entities(app_name, type, equality_field_values \\ []) do
@@ -155,7 +162,9 @@ defmodule Erm.Persistence.Ecto do
   end
 
   def get_entity(_app, uuid) do
-    Repo.get(Entity, uuid)
-    |> Entity.to_core_entity()
+    case Repo.get(Entity, uuid) do
+      nil -> nil
+      entity -> entity |> Entity.to_core_entity()
+    end
   end
 end
