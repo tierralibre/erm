@@ -20,6 +20,15 @@
                 {"instruction": "add_relation", "type": "store_sells_product", "from": "store", "to": "new_product", "name": "new_sell"}
             ],
             "output": {"entity": "new_product"}
+        },
+        {
+            "name": "update_store",
+            "type": "instructions",
+            "input": {"data":"map"},
+            "instructions": [
+                {"instruction": "update_entity", "type": "store", "id":"data", "data": "data", "name": "updated_store"}
+            ],
+            "output": {"entity": "updated_store"}
         }
     ]
 }
