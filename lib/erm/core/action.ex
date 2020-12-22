@@ -101,7 +101,7 @@ defmodule Erm.Core.Action do
   defp update_entity(app_name, step, input, params, bagage, repo) do
     data = find_data(step["data"], params, bagage)
     id = find_ft(step["id"], input, params, bagage)
-    up_entity = Entity.new(%{type: step["type"], data: data, id: id})
+    up_entity = %{type: step["type"], data: data, id: id} 
     Erm.Persistence.Ecto.save_entity(app_name, up_entity, repo)
   end
 
