@@ -22,8 +22,9 @@ defmodule Erm.Core.Application do
   end
 
   def run_action(%__MODULE__{} = application, action_name, params) do
-    application
-    |> find_action(action_name)
-    |> Action.run_action(application, params)
+    case find_action(application, action_name) do
+      nil -> {:error, "Action #{action_name} is not registered in the app"}
+      action -> Action.run_action(action, application, params)
+    end
   end
 end

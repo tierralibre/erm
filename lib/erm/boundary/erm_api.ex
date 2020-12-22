@@ -2,12 +2,20 @@ defmodule Erm.Boundary.ErmApi do
   alias Erm.Core.{Application, Entity, Relation}
   alias Erm.Boundary.Apps
 
-  def run_action(app_name, action_name, params) do
-    {:ok, to_return} =
-      Apps.get_application(app_name)
-      |> Application.run_action(action_name, params)
+  def run_action(app_name, action_name, params) do  
+      case Apps.get_application(app_name) do
+        nil -> 
+          {:error, "The application #{app_name} is not registered"}
+        app -> 
+          Application.run_action(app, action_name, params)
+      end
+  end
 
-    to_return
+  def run_action!(app_name, action_name, params) do
+    case run_action(app_name, action_name, params) do
+      {:ok, to_return} -> to_return
+      {:error, message} -> raise message
+    end
   end
 
   def list_entities(app_name, type, equality_field_values \\ []) do

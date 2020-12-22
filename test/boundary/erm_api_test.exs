@@ -22,13 +22,13 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute configured add action" do
     %{entity: entity} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
 
     %{entity: e} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
@@ -39,10 +39,10 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute internal action" do
     %{entity: entity} =
-      ErmApi.run_action("Locally_test", :dumb_internal_action, %{"name" => "nostromo"})
+      ErmApi.run_action!("Locally_test", :dumb_internal_action, %{"name" => "nostromo"})
 
     %{entity: e} =
-      ErmApi.run_action("Locally_test", :dumb_internal_action, %{"name" => "nostromo"})
+      ErmApi.run_action!("Locally_test", :dumb_internal_action, %{"name" => "nostromo"})
 
     assert entity.data["name"] == "nostromo"
     assert e.data["name"] == "nostromo"
@@ -50,13 +50,13 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute internal update entity action" do
     %{entity: entity} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
 
     %{entity: updated_entity} =
-      ErmApi.run_action("Locally_test", :update_store_test, %{
+      ErmApi.run_action!("Locally_test", :update_store_test, %{
         "store_id" => entity.id,
         "store_update" => %{"name" => "patachula"}
       })
@@ -66,13 +66,13 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute internal update relation action" do
     %{relation: relation} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
 
     %{relation: updated_relation} =
-      ErmApi.run_action("Locally_test", :update_ownership_test, %{
+      ErmApi.run_action!("Locally_test", :update_ownership_test, %{
         "seller" => relation.from,
         "store" => relation.to,
         "rel_update" => %{"name" => "patachula"}
@@ -83,13 +83,13 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute internal delete relation action" do
     %{relation: relation} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
 
     %{relation: deleted_relation} =
-      ErmApi.run_action("Locally_test", :delete_ownership_test, %{
+      ErmApi.run_action!("Locally_test", :delete_ownership_test, %{
         "seller" => relation.from,
         "store" => relation.to
       })
@@ -105,14 +105,30 @@ defmodule Erm.Boundary.ApiTest do
 
   test "execute internal delete entity action" do
     %{entity: entity} =
-      ErmApi.run_action("Locally_test", :add_store_test, %{
+      ErmApi.run_action!("Locally_test", :add_store_test, %{
         "seller" => "928374923874",
         "store" => %{"name" => "nostromo"}
       })
 
     %{entity: deleted_entity} =
-      ErmApi.run_action("Locally_test", :delete_store_test, %{"store" => entity.id})
+      ErmApi.run_action!("Locally_test", :delete_store_test, %{"store" => entity.id})
 
     assert nil == ErmApi.get_entity("Locally_test", deleted_entity.id)
+  end
+
+  test "not registered app returns error" do
+    error = ErmApi.run_action("Non existing app", :non_existing_action, %{})
+    assert {:error, _message} = error
+  end
+
+  test "not registered app throws error" do
+    assert_raise RuntimeError, fn ->
+      ErmApi.run_action!("Non existing app", :non_existing_action, %{})
+    end
+  end
+
+  test "not registered action returns error" do
+    error = ErmApi.run_action("Locally_test", :non_existing_action, %{})
+    assert {:error, _message} = error
   end
 end
